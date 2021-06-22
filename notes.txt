@@ -1,0 +1,4 @@
+to do
+    change answerText to summaryAnswerText in the Answer object
+    add a answerText in the AnswerLocation object
+    handle fill in the blanks
