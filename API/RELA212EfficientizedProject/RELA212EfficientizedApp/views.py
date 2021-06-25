@@ -8,15 +8,15 @@ from .models import *
 
 class ExamsViewSet(viewsets.ModelViewSet):
     queryset = Exam.objects.all()
-    serializerClass = ExamSerializer
+    serializer_class = ExamSerializer
 
 class StudyGuidesViewSet(viewsets.ModelViewSet):
     queryset = StudyGuide.objects.all()
-    serializerClass = StudyGuideSerializer
+    serializer_class = StudyGuideSerializer
 
 class QuestionGroupsViewSet(viewsets.ModelViewSet):
     queryset = QuestionGroup.objects.all()
-    serializerClass = QuestionGroupSerializer
+    serializer_class = QuestionGroupSerializer
 
 class QuestionsViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
@@ -24,12 +24,12 @@ class QuestionsViewSet(viewsets.ModelViewSet):
 
 class AnswerHintsViewSet(viewsets.ModelViewSet):
     queryset = AnswerHint.objects.all()
-    serializerClass = AnswerHintSerializer
+    serializer_class = AnswerHintSerializer
 
 class AnswersViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
-    serializerClass = AnswerSerializer
+    serializer_class = AnswerSerializer
 
 class AnswerLocationsViewSet(viewsets.ModelViewSet):
     queryset = AnswerLocation.objects.all()
-    serializerClass = AnswerLocationSerializer
+    serializer_class = AnswerLocationSerializer

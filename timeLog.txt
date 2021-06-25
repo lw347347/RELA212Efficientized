@@ -5,3 +5,6 @@
 2021-06-23: 21 minutes
     Initialized front end
     Tested backend posts and gets with postman
+
+2021-06-24: 157 minutes
+    Front end nonsense
