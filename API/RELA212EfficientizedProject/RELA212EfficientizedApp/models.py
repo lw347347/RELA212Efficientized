@@ -12,7 +12,7 @@ class StudyGuide(models.Model):
     examId = models.ForeignKey(Exam, on_delete=models.CASCADE, default=None, blank=True, null=True)
     name = models.TextField(default=None, blank=True, null=True)
     typeOfStudyGuide = models.TextField(default=None, blank=True, null=True)
-    file = models.BinaryField(default=None, blank=True, null=True)
+    file = models.FileField(default=None, blank=True, null=True)
     dateOfAssignment = models.DateField(default=None, blank=True, null=True)
     studyGuideNumber = models.IntegerField(default=None, blank=True, null=True)
 

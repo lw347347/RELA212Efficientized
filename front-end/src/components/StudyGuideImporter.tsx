@@ -15,32 +15,33 @@ export default function StudyGuideImporter(props: {}) {
 
     let handleSubmit = (e: any) => {
         e.preventDefault();
-        let formData;
-        console.log('heee');
+        let myFormData = new FormData(document.getElementById("myForm") as HTMLFormElement);
+
+        DatabaseService.createStudyGuide(myFormData);
     }   
     
     return(
         <div>
             <Form id="myForm" onSubmit={handleSubmit}>
-                <Form.Group controlId="studyGuideName">
+                <Form.Group>
                     <Form.Label>Study Guide Name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter study guide name" />
+                    <Form.Control type="text" name="name" id="name" placeholder="Enter study guide name" />
                 </Form.Group>
-                <Form.Group controlId="studyGuideType">
+                <Form.Group>
                     <Form.Label>Study Guide Type</Form.Label>
-                    <Form.Control as="select">
+                    <Form.Control as="select" name="typeOfStudyGuide" id="typeOfStudyGuide">
                         <option value="handout">Handout</option>
                         <option value="lecture">Lecture</option>
                         <option value="scripture">Scripture</option>
                     </Form.Control>
                 </Form.Group>
-                <Form.Group controlId="dateOfAssignment">
+                <Form.Group>
                     <Form.Label>Date of Assignment</Form.Label>
-                    <Form.Control type="date"/>
+                    <Form.Control type="date" name="dateOfAssignment" id="dateOfAssignment" />
                 </Form.Group>
-                <Form.Group controlId="examId">
+                <Form.Group>
                     <Form.Label>Exam</Form.Label>
-                    <Form.Control as="select">
+                    <Form.Control as="select" name="examId" id="examId">
                         {
                             examList.map((item: any, index: number) => {
                                 return <option>{ item.examNumber }</option>;
@@ -50,7 +51,8 @@ export default function StudyGuideImporter(props: {}) {
                 </Form.Group>
                 <Form.Group>
                     <Form.File 
-                        id="custom-file"
+                        id="file"
+                        name="file"
                         label="Study guide file"
                         custom
                     />

@@ -1,5 +1,7 @@
 from rest_framework import serializers
+from rest_framework.fields import FileField
 from .models import *
+from .parsePDF import parsePDF
 
 class ExamSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -12,10 +14,20 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
         )
 
 class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
+    exam = ExamSerializer(
+        many=False,
+        read_only=True
+    )
+    examId = serializers.IntegerField(
+        write_only=True
+    )
+    file = FileField()
+
     class Meta:
         model = StudyGuide
         fields = (
             'studyGuideId',
+            'exam',
             'examId',
             'name',
             'typeOfStudyGuide',
@@ -23,6 +35,23 @@ class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
             'dateOfAssignment',
             'studyGuideNumber',
         )
+
+    def create(self, formData):
+        print(formData)
+        examId = Exam.objects.filter(pk=formData['examId']).first()
+        studyGuide = StudyGuide.objects.create(
+            examId = examId,
+            name = formData["name"],
+            typeOfStudyGuide = formData["typeOfStudyGuide"],
+            dateOfAssignment = formData["dateOfAssignment"],
+            file = formData["file"]
+        )
+        studyGuide.save()
+
+        # Parse the PDFs
+        parsePDF(studyGuide)
+
+        return studyGuide
 
 class QuestionGroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
