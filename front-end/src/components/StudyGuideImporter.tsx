@@ -2,9 +2,13 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import React, { useEffect, useState } from 'react';
 import DatabaseService from '../services/services';
+import { Redirect } from 'react-router-dom';
+import LeftColumn from './LeftColumn';
+import RightColumn from './RightColumn';
 
 export default function StudyGuideImporter(props: {}) {
     const [examList, setExamList] = useState<any>([]);
+    const [redirect, setRedirect] = useState<boolean>(false);
 
     useEffect(() => {
         // go get the exam lists
@@ -17,11 +21,21 @@ export default function StudyGuideImporter(props: {}) {
         e.preventDefault();
         let myFormData = new FormData(document.getElementById("myForm") as HTMLFormElement);
 
-        DatabaseService.createStudyGuide(myFormData);
-    }   
+        DatabaseService.createStudyGuide(myFormData).then((response: any) => {
+            if (response.status === 201) {
+                // It worked
+                setRedirect(true);
+            }
+        });
+    }  
+    
+    if (redirect) {
+        return <Redirect to="/studyGuides" />
+    }
     
     return(
-        <div>
+        <div className="mainContent">        
+            <LeftColumn></LeftColumn>
             <Form id="myForm" onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Study Guide Name</Form.Label>
@@ -34,6 +48,14 @@ export default function StudyGuideImporter(props: {}) {
                         <option value="lecture">Lecture</option>
                         <option value="scripture">Scripture</option>
                     </Form.Control>
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>String that starts a question</Form.Label>
+                    <Form.Control type="text" name="questionGroupSplitter" id="questionGroupSplitter" />
+                </Form.Group>
+                <Form.Group>
+                    <Form.Label>String that tell us to look for questions</Form.Label>
+                    <Form.Control type="text" name="questionGroupBeginning" id="questionGroupBeginning" />
                 </Form.Group>
                 <Form.Group>
                     <Form.Label>Date of Assignment</Form.Label>
@@ -61,6 +83,7 @@ export default function StudyGuideImporter(props: {}) {
                     Submit
                 </Button>
             </Form>
+            <RightColumn></RightColumn>
         </div>
     )
 }

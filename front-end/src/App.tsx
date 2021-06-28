@@ -7,6 +7,7 @@ import MiddleColumn from './components/MiddleColumn';
 import RightColumn from './components/RightColumn';
 import StudyGuideImporter from './components/StudyGuideImporter';
 import StudyGuides from './components/StudyGuides';
+import SingleStudyGuide from './components/SingleStudyGuide';
 
 import {
   BrowserRouter as Router,
@@ -32,21 +33,20 @@ function App() {
             </li>
           </ul>
         </nav>
-        <div className="mainContent">        
-          <LeftColumn></LeftColumn>
-          <Switch>
-            <Route path="/StudyGuideImporter">
-              <StudyGuideImporter />
-            </Route>
-            <Route path="/StudyGuides">
-              <StudyGuides />
-            </Route>
-            <Route path="/">
-              <div>Home</div>
-            </Route>
-          </Switch>
-          <RightColumn></RightColumn>
-        </div>
+        <Switch>
+          <Route path="/StudyGuideImporter">
+            <StudyGuideImporter />
+          </Route>
+          <Route path="/StudyGuides/:studyGuideId">
+            <SingleStudyGuide />
+          </Route>
+          <Route path="/StudyGuides">
+            <StudyGuides />
+          </Route>
+          <Route path="/">
+            <div>Home</div>
+          </Route>
+        </Switch>
       </div>
     </Router>
 

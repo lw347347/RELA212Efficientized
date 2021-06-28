@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework.fields import FileField
+from rest_framework.relations import PrimaryKeyRelatedField
 from .models import *
 from .parsePDF import parsePDF
 
@@ -13,6 +14,45 @@ class ExamSerializer(serializers.HyperlinkedModelSerializer):
             'examEndDate',
         )
 
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'answerId',
+            'questionId',
+            'answerText',
+        )
+    def update(self, instance, validated_data):
+        instance.answerText = validated_data.get('answerText', instance.answerText)
+        instance.save()
+        return instance
+
+class QuestionSerializer(serializers.ModelSerializer):
+    answer = AnswerSerializer(many=False)
+    class Meta:
+        model = Question
+        fields = (
+            'questionId',
+            'questionGroupId',
+            'questionText',
+            'questionNumber',
+            'answer',
+        )
+
+class QuestionGroupSerializer(serializers.ModelSerializer):
+    questions = QuestionSerializer(many=True, read_only=True)
+    class Meta:
+        model = QuestionGroup
+        fields = [
+            'questionGroupId',
+            'studyGuideId',
+            'scriptureBookName',
+            'scriptureChapterNumber',
+            'countOfQuestions',
+            'questionGroupNumber',
+            'questions'
+        ]
+
 class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
     exam = ExamSerializer(
         many=False,
@@ -22,6 +62,9 @@ class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
         write_only=True
     )
     file = FileField()
+    questionGroups = QuestionGroupSerializer(
+        many=True
+    )
 
     class Meta:
         model = StudyGuide
@@ -34,6 +77,9 @@ class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
             'file',
             'dateOfAssignment',
             'studyGuideNumber',
+            'questionGroupSplitter',
+            'questionGroupBeginning',
+            'questionGroups',
         )
 
     def create(self, formData):
@@ -49,31 +95,9 @@ class StudyGuideSerializer(serializers.HyperlinkedModelSerializer):
         studyGuide.save()
 
         # Parse the PDFs
-        parsePDF(studyGuide)
+        parsePDF(studyGuide, formData["file"], questionGroupSplitter=formData["questionGroupSplitter"])
 
         return studyGuide
-
-class QuestionGroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = QuestionGroup
-        fields = (
-            'questionGroupId',
-            'studyGuideId',
-            'scriptureBookName',
-            'scriptureChapterNumber',
-            'countOfQuestions',
-            'questionGroupNumber',
-        )
-
-class QuestionSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Question
-        fields = (
-            'questionId',
-            'questionGroupId',
-            'questionText',
-            'questionNumber',
-        )
 
 class AnswerHintSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -88,14 +112,7 @@ class AnswerHintSerializer(serializers.HyperlinkedModelSerializer):
             'handoutCharacterStart',
             'handoutCharacterEnd',
         )
-class AnswerSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Answer
-        fields = (
-            'answerId',
-            'questionId',
-            'answerText',
-        )
+
 class AnswerLocationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = AnswerLocation

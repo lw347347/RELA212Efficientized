@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 from rest_framework import viewsets
@@ -17,10 +18,14 @@ class StudyGuidesViewSet(viewsets.ModelViewSet):
 class QuestionGroupsViewSet(viewsets.ModelViewSet):
     queryset = QuestionGroup.objects.all()
     serializer_class = QuestionGroupSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['studyGuideId']
 
 class QuestionsViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
-    serializerClass = QuestionSerializer
+    serializer_class = QuestionSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['questionGroupId']
 
 class AnswerHintsViewSet(viewsets.ModelViewSet):
     queryset = AnswerHint.objects.all()
@@ -28,7 +33,9 @@ class AnswerHintsViewSet(viewsets.ModelViewSet):
 
 class AnswersViewSet(viewsets.ModelViewSet):
     queryset = Answer.objects.all()
-    serializer_class = AnswerSerializer
+    serializer_class = AnswerSerializer    
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['questionId']
 
 class AnswerLocationsViewSet(viewsets.ModelViewSet):
     queryset = AnswerLocation.objects.all()

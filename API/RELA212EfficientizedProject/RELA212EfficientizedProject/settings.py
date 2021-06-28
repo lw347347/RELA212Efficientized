@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'RELA212EfficientizedApp',
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

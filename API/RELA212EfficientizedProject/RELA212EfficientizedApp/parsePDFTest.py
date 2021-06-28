@@ -20,3 +20,21 @@ pageObject = reader.getPage(1)
 firstPageText = pageObject.extractText()
 splitStrings = firstPageText.replace("\n", "").split("*")
 print(splitStrings)
+
+# Loop through each page
+for pageIndex in range(1, reader.getNumPages):
+    page = reader.getPage(1)
+    pageText = page.extractText()
+
+    # Split the strings based on the asterisk
+    splitStrings = pageText.replace("\n" "").split("*")
+
+    # Loop through each split string to find the questions
+    for questionGroup in splitStrings:
+        # Create the question group
+
+        for question in questionGroup.split("?"):
+            # Create the question
+
+            #look for hints
+        
